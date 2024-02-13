@@ -3,6 +3,7 @@ from src import status
 
 app = Flask(__name__)
 
+
 COUNTERS = {}
 
 # We will use the app decorator and create a route called slash counters.
@@ -10,7 +11,7 @@ COUNTERS = {}
 # let Flask know that the only methods that is allowed to called
 # on this function is "POST".
 @app.route('/counters/<name>', methods=['POST'])
-def create_counter(name):
+def create_counter(name): 
     """Create a counter"""
     app.logger.info(f"Request to create counter: {name}")
     global COUNTERS
@@ -20,7 +21,7 @@ def create_counter(name):
     return {name: COUNTERS[name]}, status.HTTP_201_CREATED
 
 @app.route('/counters/<name>', methods=['PUT'])
-def update_counter(name):
+def update_counter(name): 
     """Update a Counter"""
     app.logger.info(f"Request to update counter: {name}")
     global COUNTERS
@@ -30,10 +31,21 @@ def update_counter(name):
     return {name: COUNTERS[name]}, status.HTTP_200_OK
 
 @app.route('/counters/<name>', methods=['GET'])
-def read_a_counter(name):
+def read_a_counter(name): 
     """Get a Counter Value"""
     app.logger.info(f"Request to get counter: {name}")
     global COUNTERS
     if name not in COUNTERS:
         return {"Message":f"Counter {name} does not exist"}, status.HTTP_404_NOT_FOUND
     return {name: COUNTERS[name]}, status.HTTP_200_OK
+
+@app.route('/counters/<name>', methods=['DELETE'])
+def delete_a_counter(name): 
+    """Delete a Counter"""
+    app.logger.info(f"Request to delete counter: {name}")
+    global COUNTERS
+    if name not in COUNTERS:
+        return {"Message":f"Counter {name} does not exist"}, status.HTTP_404_NOT_FOUND
+    del COUNTERS[name]
+    return {"Message":f"Counter {name} deleted successfully"}, status.HTTP_204_NO_CONTENT
+
